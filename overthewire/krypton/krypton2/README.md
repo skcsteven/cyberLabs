@@ -11,7 +11,7 @@ After seeing this, I decided to create a brute force bash script that would repe
 
 Bash script:
 
-
+https://github.com/skcsteven/cyberFun/blob/1cf9f6c08517f1cf4f8a50fb743139b11d78407c/overthewire/krypton/krypton2/firstBashEver.sh#L1-L9
 
 The results from running:
 
