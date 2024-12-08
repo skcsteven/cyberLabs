@@ -10,3 +10,5 @@ The green cable (straight through) is used for connecting different network devi
 In newer hardware, console to pc connections can be made through USB.
 
 Console configurations are modified through CLI and can be made remotely through SSH.
+
+Cross-over cables connect two devices of same type (PC to PC, Switch to Switch)
