@@ -61,7 +61,7 @@ I will do the same process with the second switch.
 
 Our last step of VLAN Packet Tracer Example is configuration verification. to verify our VLAN Packet Tracer Configuration, we will use verification commands like “show vlan brief“, “show interfaces“, “show interfaces trunk” etc.
 
-'''
+```
 Switch#show vlan brief
 
 VLAN Name                             Status    Ports
@@ -77,11 +77,11 @@ VLAN Name                             Status    Ports
 1003 token-ring-default               active    
 1004 fddinet-default                  active    
 1005 trnet-default                    active 
-'''
+```
 
 This looks good, the PCs connected to the left switch are properly in their assigned VLAN. But the Fa0/1 connection to the other switch is not included. Now we will investigate each connection.
 
-'''
+```
 Switch#show interfaces Fa0/1 switchport
 Name: Fa0/1
 Switchport: Enabled
@@ -106,9 +106,9 @@ Capture Mode Disabled
 Capture VLANs Allowed: ALL
 Protected: false
 Appliance trust: none
-'''
+```
 
-'''
+```
 Switch#show interfaces Fa0/2 switchport
 Name: Fa0/2
 Switchport: Enabled
@@ -133,9 +133,9 @@ Capture Mode Disabled
 Capture VLANs Allowed: ALL
 Protected: false
 Appliance trust: none
-'''
+```
 
-'''
+```
 Switch#show interfaces trunk
 Port        Mode         Encapsulation  Status        Native vlan
 Fa0/1       on           802.1q         trunking      1
@@ -148,7 +148,7 @@ Fa0/1       2,3
 
 Port        Vlans in spanning tree forwarding state and not pruned
 Fa0/1       2,3
-'''
+```
 
 Interpreting the Output:
 VLANs 2, 3, and 4 are allowed on the trunk, but only VLANs 2 and 3 are active and forwarding traffic.
@@ -161,7 +161,7 @@ To verify the communication between same VLANs now we will use ping command to c
 
 From PC0 I will check the communication, the below results check out with the VLAN configuration because PC0 is able to connect to the other devices set to VLAN 2 and not those on VLAN 3.
 
-'''
+```
 C:\>ipconfig
 
 FastEthernet0 Connection:(default port)
@@ -249,11 +249,11 @@ Ping statistics for 192.168.1.8:
     Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
     Minimum = 0ms, Maximum = 0ms, Average = 0ms
-'''
+```
 
 I will now check that the other VLAN devices are connected properly.
 
-'''
+```
 C:\>ping 192.168.1.6
 
 Pinging 192.168.1.6 with 32 bytes of data:
@@ -279,7 +279,7 @@ Request timed out.
 
 Ping statistics for 192.168.1.7:
     Packets: Sent = 4, Received = 0, Lost = 4 (100% loss),
-'''
+```
 
 The above shows that the devices on VLAN 3 are connected and no cross VLAN communication is possible.
 
