@@ -206,6 +206,8 @@ A Layer 3 switch combines the functionality of a switch and a router.
 VLANs are configured on the switch, and SVIs (Switch Virtual Interfaces) are used for routing.
 Traffic between VLANs is routed directly within the switch, improving performance.
 
+![image](https://github.com/user-attachments/assets/e1937ba0-3515-4fd7-ba40-34d7ff4f6eb6)
+
 Steps:
 
 - Create VLANs and assign ports to them.
