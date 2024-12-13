@@ -30,6 +30,8 @@ Adjusts routes dynamically in response to network changes.
   - Full mesh - direct connections between each router, good for LAN, smaller networks, not too scalable due to hardware limitations
   - Partial mesh - not all routers are directly connected, makes use of intermediate routers, less hardware/more real world realistic
   - hub and spoke - one router (hub) connects to the others (spokes), reduces complexity, hub fails whole system fails
+- Port types matter, I initially had the router to switch connection through a switchport (layer 2), so I couldn't assign an IP through that interface
+- 
 
 # Lab Setup for Static and Dynamic Routing
 
@@ -47,11 +49,11 @@ Goal: Configure static routes first, then transition to dynamic routing using RI
 
 #### 1. Lab Topology:
 
-- 3 routers (Router1, Router2, Router3) connected in a partial mesh with crossover cables. Cisco 2811 is selected with addition WIC card in order to have the required amount of ethernet ports
+- 3 routers (Router1, Router2, Router3) connected in a partial mesh with crossover cables. Cisco 1841 is selected
 - 3 switches, one connected to each router. Cisco 2960 is selected
-- 3 PCs, each connected to a switch.
+- 6 PCs, each connected to a switch.
 
-#### 2. Assign IP Addresses:
+#### 2. Assign IP Addresses through DHCP:
 
 Each router needs:
 
@@ -62,6 +64,34 @@ Router2 to Network B: 192.168.2.1/24.
 Router3 to Network C: 192.168.3.1/24.
 
 2. Interface to other routers (e.g., Router1 <-> Router2). Use a unique subnet, e.g., 10.0.0.0/30 for these links.
+
+Step-by-step:
+
+Setup each router's IP address and DHCP:
+
+_CLI from router 1_
+
+```
+Router(config)#interface Fa0/0
+Router(config-if)#ip address 192.168.1.1 255.255.255.0
+Router(config-if)#no shutdown
+Router(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Router(config-if)#exit
+Router(config)#ip dhcp pool PC_POOL
+Router(dhcp-config)#network 192.168.1.0 255.255.255.0
+Router(dhcp-config)#default-router 192.168.1.1
+Router(dhcp-config)#dns-server 8.8.8.8
+Router(dhcp-config)#exit
+Router(config)#exit
+```
+
+After repeating this process for each router cluster, I verify that each PC has a correct IP assigned.
+
+![image](https://github.com/user-attachments/assets/0cb9af1d-04f3-47ec-9af9-012678dfc97d)
+
+Next, I need to configure the interfaces to the other routers.
 
 #### 3. Static Routing Configuration:
 
