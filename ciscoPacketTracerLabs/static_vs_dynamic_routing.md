@@ -20,15 +20,16 @@ Uses protocols (like RIP, OSPF, or EIGRP) to automatically learn and update rout
 Scales better for large networks.
 Adjusts routes dynamically in response to network changes.
 
-
-
 # Key things learned
 
 - The subnet 10.0.0.0/30 has only two usable IP addresses
   - The /30 notation means the subnet mask has 30 bits set to 1       (11111111.11111111.11111111.11111100, out of 32 bits)
   - 2 bits open means on 2^2 = 4 available options 10.0.0.0-3
   - the ip ending in 0 is the host address, and the one ending in 3 is the broadcast address so that leaves only the IPs ending with 1 and 2
-- 
+- Topology types
+  - Full mesh - direct connections between each router, good for LAN, smaller networks, not too scalable due to hardware limitations
+  - Partial mesh - not all routers are directly connected, makes use of intermediate routers, less hardware/more real world realistic
+  - hub and spoke - one router (hub) connects to the others (spokes), reduces complexity, hub fails whole system fails
 
 # Lab Setup for Static and Dynamic Routing
 
@@ -46,7 +47,7 @@ Goal: Configure static routes first, then transition to dynamic routing using RI
 
 #### 1. Lab Topology:
 
-- 3 routers (Router1, Router2, Router3). Cisco 2811 is selected with addition WIC card in order to have the required amount of ethernet ports
+- 3 routers (Router1, Router2, Router3) connected in a partial mesh with crossover cables. Cisco 2811 is selected with addition WIC card in order to have the required amount of ethernet ports
 - 3 switches, one connected to each router. Cisco 2960 is selected
 - 3 PCs, each connected to a switch.
 
