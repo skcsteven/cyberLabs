@@ -31,7 +31,15 @@ Adjusts routes dynamically in response to network changes.
   - Partial mesh - not all routers are directly connected, makes use of intermediate routers, less hardware/more real world realistic
   - hub and spoke - one router (hub) connects to the others (spokes), reduces complexity, hub fails whole system fails
 - Port types matter, I initially had the router to switch connection through a switchport (layer 2), so I couldn't assign an IP through that interface
-- 
+- configuring IPs for subnets between the routers is tricky:
+  - R1 ↔ R2: 10.0.0.0/30
+    - R1: 10.0.0.1
+    - R2: 10.0.0.2
+  - R2 ↔ R3: 10.0.0.4/30
+    - R2: 10.0.0.5
+    - R3: 10.0.0.6
+  - The IPs 10.0.0.0 to 10.0.0.3 belong to the R1 ↔ R2 subnet (10.0.0.0/30) with useable IPs 10.0.0.1-2.
+  - The IP 10.0.0.4 starts a new subnet (10.0.0.4/30) used for the R2 ↔ R3 connection with useable IPs 10.0.0.5-6.
 
 # Lab Setup for Static and Dynamic Routing
 
@@ -47,7 +55,7 @@ Goal: Configure static routes first, then transition to dynamic routing using RI
 
 ## Begin with static routing
 
-#### 1. Lab Topology:
+#### 1. Static Topology:
 
 - 3 routers (Router1, Router2, Router3) connected in a partial mesh with crossover cables. Cisco 1841 is selected
 - 3 switches, one connected to each router. Cisco 2960 is selected
@@ -91,7 +99,18 @@ After repeating this process for each router cluster, I verify that each PC has 
 
 ![image](https://github.com/user-attachments/assets/0cb9af1d-04f3-47ec-9af9-012678dfc97d)
 
-Next, I need to configure the interfaces to the other routers.
+Next, I need to configure the interfaces between routers.
+
+_R1 to R2_
+```
+Router(config)# interface Fa0/1
+Router(config-if)# ip address 10.0.0.1 255.255.255.252
+Router(config-if)# no shutdown
+Router(config-if)# exit
+```
+For R2 to R1, I would do "ip address 10.0.0.2 255.255.255.252"
+
+For R2 to R3, "ip address 10.0.0.5 255.255.255.252" because 10.0.0.3-4 are a part of the subnet between R1 and R2
 
 #### 3. Static Routing Configuration:
 
