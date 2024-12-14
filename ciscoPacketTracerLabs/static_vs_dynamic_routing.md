@@ -102,29 +102,80 @@ After repeating this process for each router cluster, I verify that each PC has 
 Next, I need to configure the interfaces between routers.
 
 _R1 to R2_
+
 ```
 Router(config)# interface Fa0/1
 Router(config-if)# ip address 10.0.0.1 255.255.255.252
 Router(config-if)# no shutdown
 Router(config-if)# exit
 ```
+
 For R2 to R1, I would do "ip address 10.0.0.2 255.255.255.252"
 
 For R2 to R3, "ip address 10.0.0.5 255.255.255.252" because 10.0.0.3-4 are a part of the subnet between R1 and R2
 
+Once the interfaces are setup, I check to see if R1 can communicate with the other routers with "ping":
+
+![image](https://github.com/user-attachments/assets/0e38170d-b0d4-49c3-b9b7-aeb588b3b6d1)
+
+As expected, only the direct connection to R2 allows traffic.
+
+When I try to ping PC3 from PC1, I get "Destination host unreachable".
+
 #### 3. Static Routing Configuration:
 
-Access each router's CLI.
+Each router must know:
 
-Manually add routes. For example, on Router1:
+- How to reach the networks directly connected to the other routers.
+- Use R2 as the intermediary router.
 
-Router> enable
-Router# configure terminal
-Router(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.2
-Router(config)# ip route 192.168.3.0 255.255.255.0 10.0.0.6
-This tells Router1 to send traffic for Network B and C to their respective neighboring routers.
-Repeat for Router2 and Router3.
+On R1:
+
+- R2’s local network via R2’s IP 10.0.0.2:
+  - ```Router(config)#ip route 192.168.2.0 255.255.255.0 10.0.0.2```
+- R3’s local network via R2’s IP 10.0.0.2:
+  - ```Router(config)#ip route 192.168.3.0 255.255.255.0 10.0.0.2```
+
+On R3:
+
+- R1’s local network via R2’s IP 10.0.0.5:
+  - ```Router(config)#ip route 192.168.1.0 255.255.255.0 10.0.0.5```
+- R2’s local network via R2’s IP 10.0.0.5:
+  - ```Router(config)#ip route 192.168.2.0 255.255.255.0 10.0.0.5```
+
+R2 needs to route traffic to:
+
+- R1’s local network via R1’s IP 10.0.0.1:
+  - ```Router(config)#ip route 192.168.1.0 255.255.255.0 10.0.0.1```
+- R3’s local network via R3’s IP 10.0.0.6:
+  - ```Router(config)#ip route 192.168.3.0 255.255.255.0 10.0.0.6```
 
 Test connectivity:
 
 Use ping from one PC to another across different networks.
+
+PC1 to PC3
+
+![image](https://github.com/user-attachments/assets/957e9c7b-7704-436b-9028-eeb590600c31)
+
+PC1 to PC6
+
+![image](https://github.com/user-attachments/assets/845a74d9-289c-4a1f-b2eb-3758d8883a8e)
+
+PC3 to PC2 and PC3 to PC5
+
+![image](https://github.com/user-attachments/assets/a5df6b0a-0add-4108-93dd-4173a122dbb0)
+
+PC5 to PC1 and PC5 to PC4
+
+![image](https://github.com/user-attachments/assets/0d31c64f-d8ad-42ef-8c9d-61ff3c96546a)
+
+Success! Static routing is acheived! Next, I will go into dynamic routing.
+
+## Dynamic Routing
+
+#### Topology
+
+#### Steps
+
+
