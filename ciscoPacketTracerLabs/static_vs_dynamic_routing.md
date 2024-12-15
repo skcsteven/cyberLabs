@@ -10,15 +10,15 @@ _Lab Goals:_
 
 _Static Routing:_
 
-Manually configured routes.
-Useful for small networks or specific paths.
-Ensures full control but requires manual updates if the network changes.
+- Manually configured routes.
+- Useful for small networks or specific paths.
+- Ensures full control but requires manual updates if the network changes.
 
 _Dynamic Routing:_
 
-Uses protocols (like RIP, OSPF, or EIGRP) to automatically learn and update routes.
-Scales better for large networks.
-Adjusts routes dynamically in response to network changes.
+- Uses protocols (like RIP, OSPF, or EIGRP) to automatically learn and update routes.
+- Scales better for large networks.
+- Adjusts routes dynamically in response to network changes.
 
 # Key things learned
 
@@ -40,6 +40,7 @@ Adjusts routes dynamically in response to network changes.
     - R3: 10.0.0.6
   - The IPs 10.0.0.0 to 10.0.0.3 belong to the R1 ↔ R2 subnet (10.0.0.0/30) with useable IPs 10.0.0.1-2.
   - The IP 10.0.0.4 starts a new subnet (10.0.0.4/30) used for the R2 ↔ R3 connection with useable IPs 10.0.0.5-6.
+  - Dynamic routing frees up the network administrator from having to set routes, this is key for scaling networks.
 
 # Lab Setup for Static and Dynamic Routing
 
@@ -60,6 +61,9 @@ Goal: Configure static routes first, then transition to dynamic routing using RI
 - 3 routers (Router1, Router2, Router3) connected in a partial mesh with crossover cables. Cisco 1841 is selected
 - 3 switches, one connected to each router. Cisco 2960 is selected
 - 6 PCs, each connected to a switch.
+
+![image](https://github.com/user-attachments/assets/bbb7ba46-8bd8-4de0-93e4-86a6c0405e92)
+
 
 #### 2. Assign IP Addresses through DHCP:
 
@@ -174,8 +178,79 @@ Success! Static routing is acheived! Next, I will go into dynamic routing.
 
 ## Dynamic Routing
 
+Dynamic routing is a networking technique where routers automatically update and share information about the best paths for data to travel through a network, allowing them to adapt to changes in the network topology by choosing different routes based on current conditions.
+
+I will use RIP (Routing Information Protocol).
+
+Why Use RIP?
+
+- RIP dynamically advertises all connected and learned networks to neighboring routers. This eliminates the need for manual static route configuration.
+- If you expand the network or add new routers, RIP automatically propagates the new routes.
+
 #### Topology
+
+I will use the same topology from the static routing portion:
+
+![image](https://github.com/user-attachments/assets/93348583-c8a2-42d2-b447-2eda868f57c3)
+
 
 #### Steps
 
+Configuring RIP on the routers:
+
+On each of the routers (adjusting the 192.168.1.0 with their respective networks):
+
+```
+Router(config)#router rip
+Router(config-router)#version 2
+Router(config-router)#network 192.168.1.0
+Router(config-router)#network 10.0.0.0
+```
+
+This tells each router to use RIP to route its packets. RIP version 2 supports subnet masks (classless routing), making it compatible with modern networks. The first line with the network command tells that router to advertise its network IP to the other routers using RIP and learn routes through other routers in this network (this case there are none). The second network line advertises the 10.0.0.0 IP to learn about routes from other routers on the same interface.
+
+
+After this simple step, the routers should be connected and ready to send packets! But first I will remove the static routes set in the first part of this lab and verify RIP.
+
+To remove the static routes I will use the same command to add the route but with "no" in front:
+
+For example on router 1:
+
+```
+Router(config)#interface Fa0/1
+Router(config-if)#no ip route 192.168.2.0 255.255.255.0
+Router(config)#interface Fa0/1
+Router(config-if)#no ip route 192.168.3.0 255.255.255.0
+Router(config)#exit
+```
+
+And to check that only RIP is enabled and that R1 knows how to send traffic to R2 and R3:
+
+```
+Router#show ip route
+Codes: C - connected, S - static, I - IGRP, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
+       * - candidate default, U - per-user static route, o - ODR
+       P - periodic downloaded static route
+
+Gateway of last resort is not set
+
+     10.0.0.0/30 is subnetted, 2 subnets
+C       10.0.0.0 is directly connected, FastEthernet0/1
+R       10.0.0.4 [120/1] via 10.0.0.2, 00:00:11, FastEthernet0/1
+C    192.168.1.0/24 is directly connected, FastEthernet0/0
+R    192.168.2.0/24 [120/1] via 10.0.0.2, 00:00:11, FastEthernet0/1
+R    192.168.3.0/24 [120/2] via 10.0.0.2, 00:00:11, FastEthernet0/1
+```
+
+Note: it took some time for the router to learn the route to R3 (192.168.3.0), but we can see from R1s routing table that it knows how to send traffic without manually entering the route to Router 3!
+
+Finally, I check for connectivity by pinging PCs among different networks. After managing an unexpected DHCP timeout for network 2, I get successful pings indicating RIP has been acheived.
+
+PC1 to PC3 and PC5:
+
+![image](https://github.com/user-attachments/assets/cc483c34-c003-47a2-b2f2-fb17ff84ab67)
 
