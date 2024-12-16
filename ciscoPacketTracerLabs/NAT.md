@@ -45,6 +45,24 @@ IP Addressing:
   - External Interface (WAN): 203.0.113.1/24.
 - External Server: Assign 203.0.113.2/24.
 
+_Configure router internal facing IP and DHCP for PCs_
+
+```
+Router(config)#interface Fa0/0
+Router(config-if)#ip address 192.168.1.1 255.255.255.0
+Router(config-if)#no shutdown
+Router(config-if)#
+%LINK-5-CHANGED: Interface FastEthernet0/0, changed state to up
+%LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet0/0, changed state to up
+Router(config-if)#exit
+Router(config)#ip dhcp pool LOCAL_NETWORK
+Router(dhcp-config)#network 192.168.1.0 255.255.255.0
+Router(dhcp-config)#default-router 192.168.1.1
+Router(dhcp-config)#dns-server 8.8.8.8
+Router(dhcp-config)#exit
+Router(config)#exit
+```
+
 3. Enable NAT: 
 
   a. Configure NAT inside and outside interfaces:
