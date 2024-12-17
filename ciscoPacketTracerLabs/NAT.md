@@ -63,6 +63,17 @@ Router(dhcp-config)#exit
 Router(config)#exit
 ```
 
+_Set switchport mode to access for end devices_
+
+```
+Switch(config)#interface Fa0/2
+Switch(config-if)#switchport mode access
+```
+
+Switch ports operate in "dynamic" mode by default, which means they attempt to negotiate a trunk link if connected to another device that supports it. This can cause unnecessary delays or connectivity issues if a port tries to operate as a trunk to a PC, which doesn't understand VLAN tagging. Configuring a port as access mode explicitly designates it as connecting to an end device like a PC. This ensures the port handles untagged traffic properly.
+
+After verifying DHCP assignment of IPs and connectivity between end devices and the router, we can proceed with NAT.
+
 3. Enable NAT: 
 
   a. Configure NAT inside and outside interfaces:
