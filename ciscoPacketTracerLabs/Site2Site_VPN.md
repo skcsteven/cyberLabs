@@ -14,7 +14,9 @@ Lab Objectives:
 
 # Topology Overview
 
-
+- Router1: Represents Site A with LAN 192.168.1.0/24.
+- Router2: Represents Site B with LAN 192.168.2.0/24.
+- Both routers are connected via a simulated public network using a third router or cloud.
 
 # Steps
 
