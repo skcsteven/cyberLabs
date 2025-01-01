@@ -194,6 +194,41 @@ Jan 01 08:38:59 raspberrypi dnsmasq[603]: 3 127.0.0.1/58894 query[A] google.com 
 
 The above shows the DNS server side of things when we requested google.com and ads.example.com, success! Note: I am using the raspberry pi OS which does not have the traditional linux logging, instead logs are found using the journalctl command.
 
+I will also test from another device on the same LAN. To do this, first change your DNS server settings on your test device to the IP of the Pi. Next, simply go to google.com like you normally would and this should work fine:
+
+![image](https://github.com/user-attachments/assets/7b4aaa43-d2df-48ae-937c-2d36bd35a383)
+
+Now, see if the blocking capabilities are working by going to any entry in your blocklist:
+
+![image](https://github.com/user-attachments/assets/f8c1dbf4-561f-4703-a951-a960dce8212a)
+
+Looks good, we can now check the Raspberry Pi's logs to verify. You should see the following lines included in the journal:
+
+```
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 reply www3.l.google.com is NODATA
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 reply ogs.google.com is <CNAME>
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 forwarded ogs.google.com to 8.8.8.8
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 forwarded ogs.google.com to 1.1.1.1
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 forwarded ogs.google.com to 8.8.8.8
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 forwarded ogs.google.com to 1.1.1.1
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 cached ogs.google.com is <CNAME>
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 107 192.168.1.122/62735 query[HTTPS] ogs.google.com from 192.168.1.122
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.139
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.113
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.100
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.102
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.138
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached www3.l.google.com is 142.251.165.101
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 cached ogs.google.com is <CNAME>
+Jan 01 09:06:52 raspberrypi dnsmasq[603]: 106 192.168.1.122/54495 query[A] ogs.google.com from 192.168.1.122
+```
+
+```
+Jan 01 09:05:11 raspberrypi dnsmasq[603]: 87 192.168.1.122/62864 /etc/hosts.blocklist ads.example.com is 0.0.0.0
+```
+
+Above, the 192.168.1.122 device is my testing device, you should see the IP address of the device you are testing with. Other than that, everything is working as desired.
+
 ## Additional Functionality
 
 The above was just the base DNS service - the tip of the iceberg!
