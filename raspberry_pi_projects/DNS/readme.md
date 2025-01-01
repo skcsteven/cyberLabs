@@ -4,7 +4,7 @@ In this home lab, I set up my own DNS server with a Rapsberry Pi model 3B to lea
 
 ## Steps
 
-1. Set up static IP address on Raspberry Pi
+#### 1. Set up static IP address on Raspberry Pi
 
 I set a static IP address for my pi so that connecting devices configured to the DNS service are actually able to look for the right server. This entails changing the /etc/dhcpcd.conf file. This file is used by devices to specify how they handle IP assignment.
 
@@ -39,7 +39,7 @@ For this to take effect, restart the DHCP client service:
 sudo systemctl restart dhcpcd
 ```
 
-2. Install and Configure dnsmasq
+#### 2. Install and Configure dnsmasq
 
 First, I install dnsmasq:
 ```
@@ -75,7 +75,7 @@ addn-hosts=/etc/hosts.blocklist
 
 For my DNS server, I am also adding a blocklist. Whenever traffic from or to the entries on the blocklist go through the DNS server, the server will black hole them. This step is below.
 
-3. Create a Blocklist
+#### 3. Create a Blocklist
 
 In the above /etc/dnsmasq.conf file, we specified a blocklist of /etc/hosts.blocklist. Therefore, we need to create this list and add entries.
 
@@ -102,7 +102,7 @@ And to enable dnsmasq on boot:
 sudo systemctl enable dnsmasq
 ```
 
-4. Test the Pi as a DNS Server
+#### 4. Test the Pi as a DNS Server
 
 Now to test to see if the DNS server is functional.
 
@@ -194,3 +194,12 @@ Jan 01 08:38:59 raspberrypi dnsmasq[603]: 3 127.0.0.1/58894 query[A] google.com 
 
 The above shows the DNS server side of things when we requested google.com and ads.example.com, success! Note: I am using the raspberry pi OS which does not have the traditional linux logging, instead logs are found using the journalctl command.
 
+## Additional Functionality
+
+The above was just the base DNS service - the tip of the iceberg!
+
+Some other customizations include:
+- automating blocklist updates, using third-party comprehensive list
+- monitoring traffic trends
+- formatting dns resolution data into a user friendly GUI with charts, descriptors, etc - similar to PiHole capabilities.
+- DNSSEC for added security 
