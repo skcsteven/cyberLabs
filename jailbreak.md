@@ -1,10 +1,10 @@
-## 1. Navigate the web page, only thing that looks like a vector is the update page under the rom tab
+##### 1. Navigate the web page, only thing that looks like a vector is the update page under the rom tab
 
-## 2. the update function sends an xml config file to update the character
+##### 2. The update function sends an xml config file to update the character
 
 This looks like a XXE vulnerability
 
-## 3. use XXE (XML external entity injection)
+#### 3. Use XXE (XML external entity injection)
 
 by using burpsuite proxy and repeater, you can modify POST requests.
 
