@@ -1,1 +1,1 @@
-This directory contains all my notes/walkthroughs for the CTFs I have completed.
+This directory contains notes/walkthroughs for CTFs I have completed.
