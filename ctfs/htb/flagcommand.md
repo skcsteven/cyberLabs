@@ -1,6 +1,6 @@
 ## Flag Command 
 
-#### 1: Initial Recon
+#### 1. Initial Recon
 
 The web app seems to be a simple story game where the user inputs certain commands and tries to "beat" the game.
 
@@ -93,8 +93,7 @@ const fetchOptions = () => {
 
 Inspecting the /api/options endpoint:
 
-
-
+![Screenshot_2025-01-03_13-22-19](https://github.com/user-attachments/assets/e4055ee8-da0d-4864-9ef8-d401c667405b)
 
 As you can see, there is a secret command: "Blip-blop, in a pickle with a hiccup! Shmiggity-shmack"
 
@@ -102,3 +101,4 @@ As you can see, there is a secret command: "Blip-blop, in a pickle with a hiccup
 
 Armed with the secret command, we can start the game again and enter the command to get the flag:
 
+![flag](https://github.com/user-attachments/assets/c6e42d80-260e-45c7-b096-4dffd68e67b7)
