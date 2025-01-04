@@ -73,7 +73,7 @@ Great, the flag path is /flag. Now to read it:
 
 Nice, the flag was acquired.
 
-#### 4. Run on live docker
+#### 4. Run on live instance
 
-All we have to do now is to perform the same payload to read the flag locally on the live docker image provided on the HTB CTF platform to pwn timeKORP!
+All we have to do now is to perform the same payload to read the flag locally on the live instance/address provided on the HTB CTF platform to pwn timeKORP!
 
