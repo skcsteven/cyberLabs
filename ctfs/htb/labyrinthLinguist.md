@@ -33,7 +33,7 @@ The payload to test unsanitized JS inputs:
 <script>alert('hello')</script>
 ```
 
-This yields an error message so we know that the input is not properly sanitized. This XSS vulnerability is a great step but is a client side vulnerability - we want to be able to interact with the server side to give us the contents of the flag.txt file so we will keep searching for other injection types.
+This yields an alert message so we know that the input is not properly sanitized. This XSS vulnerability is a great step but is a client side vulnerability - we want to be able to interact with the server side to give us the contents of the flag.txt file so we will keep searching for other injection types.
 
 After taking a look at the challenge files, the pom.xml file lets us know that the application is using a template service Apache Velocity v1.7 so we can look into a potential template injection vulnerability. What the template essential does for this service is replace any value containing "TEXT" with what we enter for the ?text parameter or the submission. 
 
@@ -48,7 +48,7 @@ t.setData(runtimeServices.parse(reader, "home"));
 
 The test results: 
 
-
+![nameVar](https://github.com/user-attachments/assets/7e8bce0d-b568-40f0-a214-0535db620e1a)
 
 Great, we have proven SSTI, now to get the flag.
 
@@ -64,9 +64,9 @@ So, the following:
 #set ($run=1 + 1) $run 
 ```
 
-Should put 2 on the page. Let me try.
+Should put 2 on the page (in voxalaith). Let me try.
 
-
+![testSet](https://github.com/user-attachments/assets/e1372a3d-3b0a-4fb1-aa3d-813b505d39f0)
 
 As expected, the page rendered the value 2, so the above payload worked. Now how do we retrieve a file on the server?
 
@@ -74,7 +74,7 @@ After reading through the Velocity documentation, there is a directive (command)
 
 Success, the contents of the pom file are outputted:
 
-
+![pom](https://github.com/user-attachments/assets/0cb2b612-c655-4ea6-935b-2ab6091c97db)
 
 But after playing around searching for the flag.txt and trying common directories, there is no luck.
 
@@ -149,17 +149,15 @@ After considerable research into SSTI with Apache Velocity, I came across an art
 $output
 ```
 
-I used burpsuite repeater to make the request (and make countless other failed injection attempts):
+I used burpsuite repeater to make the request (and make countless other failed injection attempts) and get the flag in the response:
 
-
-
-
+![flag](https://github.com/user-attachments/assets/0e539d37-5245-424e-88bc-1fcfb6691ae2)
 
 
 #### Resources
 
-https://iwconnect.com/apache-velocity-server-side-template-injection/
-https://antgarsil.github.io/posts/velocity/
-https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf
-https://velocity.apache.org/engine/1.7/user-guide.html
-https://portswigger.net/web-security/server-side-template-injection
+- https://iwconnect.com/apache-velocity-server-side-template-injection/
+- https://antgarsil.github.io/posts/velocity/
+- https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf
+- https://velocity.apache.org/engine/1.7/user-guide.html
+- https://portswigger.net/web-security/server-side-template-injection
