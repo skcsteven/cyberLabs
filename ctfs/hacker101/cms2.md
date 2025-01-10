@@ -4,9 +4,7 @@
 
 The page is very barebones, however there are two options that we can navigate to that will be the primary attack surface: Creating a new page, and editing a page. Either one of these directs us to a login prompt.
 
-
-
-
+![login](https://github.com/user-attachments/assets/ecf835eb-535c-4d2d-bcc2-6385fc8ac311)
 
 #### Login Page Injection
 
@@ -16,11 +14,15 @@ Testing for SQLi:
 
 Simply entering ' for the username produces an error in the page:
 
+![intServerError](https://github.com/user-attachments/assets/2b5edfad-2d54-41fd-adfd-b2ae11438203)
+
 But entering '; for the username just gives me an unknown user response. Therefore I am likely dealing with a SQL database.
 
 For example, the username code could be "username = '<SOME INPUT>'" where <SOME INPUT> is what we enter. When we enter single apostrophe the effective result becomes "username = '''" which is invalid code. However, when we use ';, the ; ends the line of code: "username='';'" so the apostrophe after the semicolon is voided out making it legitimate code hence the normal unknown user response.
 
 From here, I try "test' or 1=1;" as my input and this time the page tells us "invalid password". Trying out to comment the remaining line of SQL to ignore the password doesn't work. There is likely a separated SQL line for password checking, to ensure that a user is matched to its password.
+
+#### SQLMAP
 
 I will make use of sqlmap to make a more comprehensive attack into this SQLi vulnerability.
 
