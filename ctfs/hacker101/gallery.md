@@ -4,6 +4,10 @@
 
 The initial page is pretty bareboned, just some pictures of kittens and one "invisible" picture - interesting.
 
+![homepage](https://github.com/user-attachments/assets/8bf9da00-bfcd-443d-a302-42c280a06d6e)
+
+
+
 No input areas or interactive buttons, so I will first enumerate the subdomains.
 
 Running the following gobuster command yields one result for a subdirectory "fetch", also checking burpsuite proxy, the fetch subdomain is requested with an id parameter when loading the page.
@@ -278,6 +282,7 @@ Making use of the SQLi, I test to see if I can update the existing entries in th
 
 If this injection works, the title for the first photo should be changed to "ttt" and the "space used" portion of the page will hopefully display the output of the ls command:
 
+![update](https://github.com/user-attachments/assets/c31d0c86-c39d-4217-9cb1-196d858d2a4a)
 
 
 
@@ -291,6 +296,7 @@ printenv | grep -i flag
 
 This returns all three flags for the CTF!
 
+![flags](https://github.com/user-attachments/assets/978fbec5-bc49-4dbb-b635-c7ba047f8066)
 
 
 #### Resources
