@@ -4,6 +4,7 @@
 
 The initial load point is a simple blog:
 
+![home](https://github.com/user-attachments/assets/b8e0271f-2eb0-4249-a973-a6cd42faf024)
 
 
 So the blog seems to be making use of PHP. I will just test a simple XSS injection for the comments section:
@@ -14,6 +15,7 @@ So the blog seems to be making use of PHP. I will just test a simple XSS injecti
 
 And this gives us our first flag!
 
+![flag1](https://github.com/user-attachments/assets/525390c7-e6d9-4b9a-80d9-5fd11d009ad5)
 
 
 Using devtools, there is an interesting comment that shows that the admin login page can be accessed by adding the following to the URL:
@@ -22,8 +24,12 @@ Using devtools, there is an interesting comment that shows that the admin login 
 ?page=admin.auth.inc
 ```
 
+![devtools](https://github.com/user-attachments/assets/1bc4a6e2-e7e2-4cf4-af37-bf58ec54be80)
+
+
 When performing a quick check of the ?page parameter, I enter a value of "0" to see what happens. An interesting error message comes up:
 
+![pageError](https://github.com/user-attachments/assets/6f60667c-15bf-4d59-bb52-0c79b1f1baaa)
 
 
 
@@ -64,6 +70,7 @@ Also, when looking at the provided comment in devtools for the admin.auth.inc pa
 
 With this knowledge, I try ?page=admin.inc to see if this will get me anywhere... and it leads me straight to the admin page --- bypassing the authentication requirement and granting the second flag:
 
+![admin](https://github.com/user-attachments/assets/9f44f8da-9317-4160-9b46-e35e9863a290)
 
 
 
@@ -88,3 +95,7 @@ From here, I just enumerate the system to find the final flag:
 ```
 <?php echo shell_exec('grep -R FLAG'); ?>
 ```
+
+![d](https://github.com/user-attachments/assets/98e03985-d7c3-4c79-b22e-4fdb7c003c79)
+
+
