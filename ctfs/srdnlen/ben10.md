@@ -1,11 +1,14 @@
 ## Ben 10 - SRDNLEN CTF - WEB (50)
 
-This is a fun ben 10 themed page with multiple pages/routes:
+![login](https://github.com/user-attachments/assets/9aa9bc26-fd26-4cda-b51d-4be01dbf36ee)
+
+This is a fun ben 10 themed challenge with multiple pages/routes:
 
 1. Registering an account
 2. resetting password
 3. Viewing ben 10 forms!
 
+![home](https://github.com/user-attachments/assets/e2437719-02d6-4c33-bb2b-901f6c65da9b)
 
 
 We are provided source code for this challenge and the key file to analyze is app.py.
@@ -69,3 +72,4 @@ The specific lines to look at are in the else statement mentioned above. If we e
 
 With this you can log into the admin account and view the flag which is hidden behind the 10th ben 10 image:
 
+![flag](https://github.com/user-attachments/assets/125b73bb-44a7-40bb-8863-ae4be74bcc73)
