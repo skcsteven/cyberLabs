@@ -1,9 +1,6 @@
 ## SPEED - srdnlen CTF - web (50)
 
--------------
-
---------------
-
+![home](https://github.com/user-attachments/assets/b1d65157-8a7f-42d5-b6a4-2010a68109d1)
 
 This web app is a Pixar Cars themed online store.
 
@@ -14,6 +11,9 @@ There are multiple functions on the page:
 3. shopping sweet cars memorabilia
 4. checking your cart
 5. redeeming a voucher
+
+![store](https://github.com/user-attachments/assets/b999c3b5-ec90-4981-8dbb-760b151be898)
+
 
 The app is JSON based and we there is cookie usage for sessions.
 
@@ -56,14 +56,12 @@ DiscountCodes.findOne({ discountCode: { $ne: null } });
 
 The $ne means not equal and { $ne: null } tells MongoDB to match any document where the discount code is not null.
 
-
-
-------------
+![burp](https://github.com/user-attachments/assets/da2c2e2b-a4df-4a26-9c11-7df82d168f3a)
 
 
 We do this 3 times to get enough money to purchase the sweet Lightning McQueen text and get our flag for this challenge!
 
-Not so quick, the discount codes can only be used once a day based on the following code:
+Not so fast, the discount codes can only be used once a day based on the following code:
 
 ```
 // Check if the voucher has already been redeemed today
@@ -149,17 +147,18 @@ The results:
 
 When I go back to my browser to check my balance:
 
-----------
-
+![money](https://github.com/user-attachments/assets/55ae55da-baa4-4597-9c0f-c4bb48ae215c)
 
 From here, we can buy the Secret Text item and get our flag:
 
+![flag](https://github.com/user-attachments/assets/4b2bd305-78eb-407a-bf8f-347c15379379)
 
--------
+
 
 
 
 #### Materials used
 
 https://portswigger.net/web-security/nosql-injection
+
 https://portswigger.net/web-security/race-conditions
