@@ -17,7 +17,8 @@ To solve the lab, retrieve the contents of the /etc/passwd file.
 
 Home page:
 
--- 
+![pathTraversalSimpleHome](https://github.com/user-attachments/assets/ec2ac751-0338-4db7-bf84-f6f97209f7de)
+
 
 Clicking on any of the products brings up the product method with a productId parameter that locates the product page to display:
 
@@ -39,3 +40,4 @@ With filename parameter set to "../../../etc/passwd" the page returns an empty i
 
 With burpsuite we can see the response contains the /etc/passwd file:
 
+![pathTraversalSimpleHosts](https://github.com/user-attachments/assets/b6e5c948-5bf4-406b-94b5-97cfe0a8390b)
