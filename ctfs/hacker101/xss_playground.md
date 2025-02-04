@@ -150,16 +150,23 @@ When I try "<a></a>" for the name of the reporter, it is entered as valid html t
 
 Let's try some <a> header payloads:
 
-<a href="javascript:alert(1)">Click Me</a> # this payload properly adds a link button that is clickable but the link is broken the javascript is not run.
+```
+<a href="javascript:alert(1)">Click Me</a>
+```
+this payload properly adds a link button that is clickable but the link is broken the javascript is not run.
 
-<a href="#" onclick="alert(document.domain)">Click Me</a> # this payload loads a button but nothing happens when clicked - javascript is not working for some reason
+```
+<a href="#" onclick="alert(document.domain)">Click Me</a>
+```
+this payload loads a button but nothing happens when clicked - javascript is not working for some reason
 
 Although javascript isn't loading through this vector, by being able to add our own <a> tags, we can redirect users to malicious links of our choosing, i.e. stealing cookie information. So far we have an open redirect vulnerability at the report user function.
 
 Trying more <a> tag based XSS payloads, I come across one that bypasses the application filtering out javascript by adding spaces and meta chars before the JS:
 
+```
 <a href=" &#14;  javascript:alert('XSS');">Click Me</a>
-
+```
 ---
 
 ## 2 DOM-Based Cross Site Scripting
