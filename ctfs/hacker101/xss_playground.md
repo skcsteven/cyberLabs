@@ -2,9 +2,10 @@
 
 As the title implies, this will likely be a page with many xss vulnerabilities.
 
----
+![homepage](https://github.com/user-attachments/assets/a178085c-2736-41bb-ae3a-8fc91555f3c1)
 
----
+![popup](https://github.com/user-attachments/assets/f92a4b2d-2803-470f-b2cb-8f780ccdac0e)
+
 
 So it looks like we need to find 5 XSS types:
 
@@ -16,7 +17,7 @@ So it looks like we need to find 5 XSS types:
 
 ## Recon
 
-Burpsuite result for subdirectories:
+Gobuster result for subdirectories:
 
 ```
 +] Url:                     https://92439067193144fb4615f30930969353.ctf.hacker101.com/
@@ -50,7 +51,8 @@ This functionality first uses a get request for a /logout.php endpoint that redi
 
 Burpsuite analysis:
 
----
+![logoutBurp](https://github.com/user-attachments/assets/de5c41a6-d1a7-4d2e-a7e6-1127aace9278)
+
 
 Ok, so there are cookies welcome, rui, cui, that may be of interest further for potential privesc or other session based attacks.
 
@@ -70,13 +72,15 @@ So based on this, it looks like we have two xss attack vectors: the feedback box
 
 #### Report User
 
----
+![report](https://github.com/user-attachments/assets/4ff3609f-3c3e-4d6d-b829-2d752c24d521)
+
 
 The report user button also presents another attack vector for xss.
 
 The request and response:
 
----
+![reportBURP](https://github.com/user-attachments/assets/20f9657e-a108-43f6-be5a-186bb5097190)
+
 
 From here we learn that the RUI cookie corresponds to the report user function, so CUI may be "create user" or something with user for the U portion.
 
@@ -89,11 +93,13 @@ We also have another parameter "act" for the action.php endpoint that uses repor
 
 We can also leave comments:
 
----
+![comment](https://github.com/user-attachments/assets/d3325380-b00d-40cc-bca3-2baf21f5e2f5)
+
 
 The request and response:
 
----
+![comment burp](https://github.com/user-attachments/assets/b1f85854-b54c-4466-9e4a-2a5a7919820c)
+
 
 The comment action also uses the action.php endpoint and act parameter but instead the value is "comment" not report. Also a cookie is set for CUI so the CUI is likely "comment user id" and RUI is likely "report user id".
 
@@ -110,9 +116,11 @@ For the editbio function, I test with burpsuite and am able to change the bio fo
 
 change bio and get cookie (PUI) for updated bio request and response:
 
----
+![bioBURP](https://github.com/user-attachments/assets/7bc273cd-5e19-48d3-ae29-6c186e23546e)
 
----
+Which results in:
+
+![bioHACKED](https://github.com/user-attachments/assets/1e7fd05d-57f4-42e9-98de-30bbd186cf37)
 
 
 ## 5 Reflective Cross Site Scripting
@@ -167,7 +175,40 @@ Trying more <a> tag based XSS payloads, I come across one that bypasses the appl
 ```
 <a href=" &#14;  javascript:alert('XSS');">Click Me</a>
 ```
----
+![storedXSS_reportName](https://github.com/user-attachments/assets/4ed165b9-0819-4f14-9b15-4fa4275c365d)
+
+Great first stored XSS found.
+
+### Edit bio
+
+From recon into a custom.js source, I found the following act to edit the bio:
+
+```
+function editProfile(e) {
+    var t = new XMLHttpRequest;
+    t.open("POST", "api/action.php?act=editbio", !0),
+    t.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"),
+    t.setRequestHeader("X-SAFEPROTECTION", "enNlYW5vb2Zjb3Vyc2U="),
+    t.onreadystatechange = function() {
+        this.readyState === XMLHttpRequest.DONE && this.status
+    }
+    ,
+    t.send("bio=" + encodeURI(msg))
+}
+```
+
+So I spin up burpsuite to send a post request with the necessary headers from above and set my bio parameter to a XSS polyglot payload to see how the server handles my request:
+
+![editbioBURP](https://github.com/user-attachments/assets/6f0b6eec-c988-4f1d-b2fa-9b488ddee062)
+
+Then I take the cookie associated with this edit and view the results in browser:
+
+![storedXSS_editbio](https://github.com/user-attachments/assets/11f0b4ec-1a19-4b67-8142-a8973b9723f6)
+
+The part of the polyglot that ran the JS was the "<svg>" tag.
+
+Another stored XSS vulnerability found! 
+
 
 ## 2 DOM-Based Cross Site Scripting
 
