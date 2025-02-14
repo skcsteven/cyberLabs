@@ -212,6 +212,69 @@ Another stored XSS vulnerability found!
 
 ## 2 DOM-Based Cross Site Scripting
 
+### Hidden who variable
+
+For the DOM-based XSS, we must use devtools (elements, console)
+
+We are looking for DOM sinks that interact with user input and allow our inputs to make the server modify the DOM.
+
+Go to "Sources" in devtools and check out the javascript files.
+
+Custom.js has functions that run on the webserver, so here we will look for DOM attack vectors.
+
+Common DOM sinks:
+- document.write()
+- document.writeln()
+- document.domain
+- element.innerHTML
+- element.outerHTML
+- element.insertAdjacentHTML
+- element.onevent
+
+At the end of the script there is an interesting line with a promising sink:
+
+```
+1 == who.includes("zsh1") && document.write("<img src=/1x1.gif?" + decodeURI(who) + "></img>");
+```
+
+This line will edit the document "document.write" by adding an image to the page where the source is /1x1.gif?__WHO__ if the who variable has the string "zsh1". So now we need to figure out what the who variable is.
+
+ At the top of the script:
+
+ ```
+ var hash = window.location.hash.substr(1);
+var result = hash.split("&").reduce(function(e, t) {
+    var n = t.split("=");
+    return e[n[0]] = n[1],
+    e
+}, {});
+var tracking = JSON.stringify(result);
+var who = (tracking = JSON.parse(tracking)).who;
+ ```
+
+This block of code first sets a "hash" variable equal to the string following a hash (fragment id). So the url of "http://example.com/#blah" would return a hash variable equal to blah.
+
+The next line of code splits the hash variable by ampersand and creates a dictionary, when adding "#test=blah&test2=blahblah" to the URL, the result variable is "{test: 'blah', test2: 'blahblah'}"
+
+Next variable "tracking" converts the above into a JSON.
+
+And finally the who varibale extracts the value for "who" in that JSON.
+
+With this knowledge the payload we append to the URL to set the who variable to test is "#who=bobby&blah=blah". This should set who to bobby:
+
+![bobby](https://github.com/user-attachments/assets/a57d7cbd-ca34-4ff5-ac1d-8c012b987445)
+
+Great, we have a DOM vector. Next to prove XSS, we can craft a payload for the who variable which will pass the conditional statement (includes string "zsh1") and deliver the XSS:
+
+```
+#who=zsh1><script>alert(777)</script><img&blah=blah
+```
+
+The XSS:
+
+![DOMAlertWHO](https://github.com/user-attachments/assets/b4ac42e3-2df2-49d6-aa96-c74b373ba397)
+
+
 ## 1 CSP-Bypass Cross Site Scripting
 
 ## 1 use of XSS to leak "something"
