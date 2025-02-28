@@ -67,7 +67,8 @@ If we set the config input to the following, we are able to pollute the prototyp
 
 After setting this as the config param we see that the getEnv() function inherited the debugMode property through protoype pollution because the div element was appended to the page.
 
----
+![debugON](https://github.com/user-attachments/assets/8c5f744f-2785-4a4d-a014-59713edd4824)
+
 
 Why did getEnv() inherit devMode if we sent the input to the getConfig() function?
 
@@ -117,7 +118,8 @@ Trying the image XSS payload:
 
 Success:
 
----
+![xss](https://github.com/user-attachments/assets/124c169f-3dd6-4795-b93c-f33d9fb6813f)
+
 
 ## Send to admin
 
