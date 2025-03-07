@@ -58,11 +58,13 @@ e407cfec1ae6a98c0635645f2bc14b3fa363c34975bfa75ddd465cbfebe8bdc0
 
 Visiting /changepasswd/--hash--:
 
----
+![resetpass](https://github.com/user-attachments/assets/e32c3f28-bd06-40c8-96bc-d2be680978d6)
+
 
 After changing the admin account's password, I can view their dashboard to verify the png we uploaded earlier.
 
----
+![admindash](https://github.com/user-attachments/assets/69dfb594-4811-42d3-8a58-b51904b5c52b)
+
 
 ## Admin Dashboard/Verification
 
@@ -111,7 +113,8 @@ exiftool -Artist=1 picture.jpg
 
 Verified accounts:
 
----
+![verified](https://github.com/user-attachments/assets/c10984c0-1f9f-4e3a-9058-a9af2faef3b7)
+
 
 Trying to login to those accounts results in a server error, too many redirects?
 
@@ -119,7 +122,8 @@ The final step must be accessing the flag through the "Verified" page that shows
 
 I try another SSTI for the "Artist" tag value to see if that gets rendered improperly on the page. I set Artist to "{{2+2}}" and the results of the verification:
 
----
+![sstiVerify](https://github.com/user-attachments/assets/93319a4e-28e3-4844-8475-2b2238ff8798)
+
 
 From here I try RCE:
 
@@ -127,11 +131,10 @@ From here I try RCE:
 
 Results:
 
----
+![rce](https://github.com/user-attachments/assets/1e44eb0f-8c09-4ca2-947a-7b93614e78d0)
+
 
 To get the flag, I just have to change the command to "cat flag.txt".
-
-
 
 # References/Learning
 
