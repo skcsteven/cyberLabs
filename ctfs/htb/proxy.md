@@ -115,6 +115,8 @@ This displays the flag on the index.html page for the proxy!
 
 ## Learning / Resources
 
+- PinkDraconian's walkthrough
+	- https://www.youtube.com/watch?v=eNOW71D2GQw&feature=youtu.be
 - web proxies
 - curl -x
 - ip-wrapper
