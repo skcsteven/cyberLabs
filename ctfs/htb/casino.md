@@ -4,7 +4,12 @@ The team stumbles into a long-abandoned casino. As you enter, the lights and mus
 
 Simple executable that asks for bets and takes user input:
 
----
+![example](https://github.com/user-attachments/assets/747ccf1b-9473-4a40-aafe-a2503a5a781b)
+
+Decompiled code:
+
+![ghidradecompile](https://github.com/user-attachments/assets/582a61da-c4f0-4587-8b26-1aeb9645f050)
+
 
 Looking at the decompiled code in ghidra tells me the program runs like this:
 
