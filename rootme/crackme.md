@@ -8,7 +8,8 @@ Calling strings on the executable doesn't yield any simple answers so I will dec
 
 Our input is checked with the check function:
 
----
+![check](https://github.com/user-attachments/assets/8e6535a8-4c67-4863-9679-ed2b09f77fe4)
+
 
 The key value is 0x950A943E7F4F96A8 and the value checked against our XOR'd input is 
 -0x5c8852a8fb9a0207 or 0xa377ad570465fdf9 in twos complement.
