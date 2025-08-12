@@ -4,8 +4,7 @@ After downloading the program and running it with wine on linux, it looks to be 
 
 This is a windows PE file. First I decompile the program in ghidra and come across the entry() function:
 
-'''
-
+```
 void entry(void)
 
 {
@@ -13,8 +12,7 @@ void entry(void)
   __scrt_common_main_seh(); # initialize the heap, I/O, global/static variables, and then call main() or WinMain(
   return;
 }
-
-'''
+```
 
 Within __scrt_common_main_seh() we need to find the call to the main function which will be relevant to solving this challenge.
 
@@ -22,8 +20,7 @@ After checking around and testing the function calls - forgive my lack of PE exp
 
 Here is the main function decompiled in ghidra:
 
-'''
-
+```
 void __fastcall main(undefined4 param_1)
 
 {
@@ -115,12 +112,11 @@ void __fastcall main(undefined4 param_1)
   __security_check_cookie(local_14 ^ (uint)&stack0xfffffffc);
   return;
 }
-
-'''
+```
 
 From this, I extracted the relevant portion which takes our password input and xors it byte by byte with two predetermined arrays:
 
-'''
+```
   print(uVar7,"Please enter your password\n> ");
   local_1c = 0;
   inputLen = 0xf;
@@ -145,11 +141,11 @@ From this, I extracted the relevant portion which takes our password input and x
   pcVar8 = "Invalid password";
   if (local_34 == 0) {
     pcVar8 = "Correct password, use it as the flag";
-'''
+```
 
 To get the password I used the following python code to perform the reverse xor-ing:
  
-'''
+```
 key1 = bytes([
     0xEE, 0x81, more bytes here
 ])
@@ -160,5 +156,4 @@ key2 = bytes([
 
 password_bytes = bytes([b1 ^ b2 for b1, b2 in zip(key1, key2)])
 print(password_bytes.decode('ascii', errors='replace'))
-
-'''
+```
