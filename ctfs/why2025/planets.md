@@ -8,7 +8,7 @@ I just started programming and created my first website, an overview of all the 
 
 When inspecting the html, there is an interesting fetch request that retrieves the planet information displayed on the page from an SQL database:
 
-'''
+```
 
         try {
             fetch("/api.php", {
@@ -46,15 +46,15 @@ When inspecting the html, there is an interesting fetch request that retrieves t
             }
 	}
     
-'''
+```
 
 From here, I try to enumerate the SQL server more and use the following as values for the "query" parameter:
 
-'''
+```
 SHOW DATABASES
 
 SHOW TABLES
-'''
+```
 The results of the SHOW TABLES command displays the tables in the database:
 
 <img width="1088" height="562" alt="image" src="https://github.com/user-attachments/assets/6aeb086a-9d22-4722-bfde-7d66a6805f65" />
