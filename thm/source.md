@@ -21,7 +21,8 @@ The vulnerable service is Webmin with MiniServ 1.890. A quick google search show
 
 I'll first try to see the password_change.cgi endpoint and see what happens. Interesting, the safety page leaks security information to us attackers - ironic:
 
-------
+<img width="451" height="636" alt="Screenshot 2025-11-08 at 18-33-50 Security Warning" src="https://github.com/user-attachments/assets/1ecaa71c-9e9d-4031-aeca-99a9c42360fa" />
+
 
 Continuing the CVE search, I found a script to RCE the machine:
 
