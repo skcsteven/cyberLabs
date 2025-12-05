@@ -127,4 +127,29 @@ PT's simulation mode lets us view the BPDUs and packets as the network learns an
 
 <img width="1098" height="622" alt="image" src="https://github.com/user-attachments/assets/80790253-575e-46b5-8eb8-66fbbc7c2286" />
 
+## Additional Safety Options & Leaving remarks
 
+Portfast - allows immediate forwarding for end devices (skips listening and learning)
+
+BPDU Guard - if an access port that is portfast receives a BPDU it will be disabled to prevent loops
+```
+    interface (INTERFACE TO ACCESS)
+    spanning-tree bpduguard enable
+```
+Root Guard - prevents other switches from becoming root
+```
+    interface (ports facing downstream switches)
+    spanning-tree guard root
+```
+Loop guard - prevents against unidirectional link failures that can cause alternate ports to move to forwarding incorrectly
+```   
+    interface (non-designated ports)
+    spanning-tree guard loop
+```
+
+When to use access or trunk port on a switch?
+ - Switch ↔ PC → Access port
+ - Switch ↔ Server (one VLAN) → Access port
+ - Switch ↔ Switch → Trunk port
+ - Switch ↔ Router for Router-on-a-Stick → Trunk port
+ - Switch ↔ Firewall → Usually trunk (but depends on design)
