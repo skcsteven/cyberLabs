@@ -28,8 +28,9 @@ Installed Debian manually with custom partitioning:
 - SSD:
   - / (ext4)
   - swap
+  - /home (ext4)  ← important
 - HDD:
-  - /home (ext4)
+  - unused / secondary storage
 
 System initially booted and worked normally.
 
@@ -49,21 +50,20 @@ No config changes were made right before this happened.
 
 Possible causes:
 - physical movement or drop
-- aging HDD starting to fail
+- filesystem corruption
+- aging storage
 
 ---
 
 ## Root Cause (Phase 1)
 
-The system was failing to mount /home due to a bad entry in /etc/fstab.
+The system failed to mount /home due to an issue in `/etc/fstab`.
 
-- incorrect or invalid UUID
-- or disk not properly detected at boot
+- incorrect or mismatched UUID
+- mount failure triggered systemd dependency failure
 
-This caused:
-- mount failure
-- systemd dependency failure
-- emergency mode boot
+Result:
+- system entered emergency mode during boot
 
 ---
 
@@ -72,7 +72,7 @@ This caused:
 Initial access to emergency mode was unreliable.
 
 Likely cause:
-- keyboard layout mismatch during boot (US vs non-US layout)
+- keyboard layout mismatch during early boot (US vs non-US layout)
 
 Solution:
 - reset root password via GRUB
@@ -110,91 +110,140 @@ Result:
 
 ---
 
-## Issue #3 — HDD Failure
+## Issue #3 — Filesystem Errors on SSD
 
-After attempting to restore /home:
+After further investigation:
 
-- reformatted /dev/sdb1
-- ran mount -a
+- /home was actually located on /dev/sda (SSD)
+- not the HDD as initially assumed
 
-Errors appeared:
-- read block errors
-- I/O errors in logs
-
-Confirmed with:
+Running:
 
 dmesg | grep -i error
+
+showed read / I/O related errors.
+
+---
+
+## Recovery — Filesystem Repair
+
+Ran filesystem check on SSD partition:
+
+fsck /dev/sdaX
+
+(accepted all fixes)
+
+After reboot:
+- system booted successfully
+- no emergency mode
+
+---
+
+## Verification
+
+Ran:
+
+lsblk -f  
+df -h  
+
+Results:
+- partitions mounted correctly
+- /home accessible
+- no immediate mount failures
 
 ---
 
 ## Root Cause (Final)
 
-The HDD is physically failing:
+Most likely:
 
-- bad sectors
-- read errors under load
-- unstable disk behavior
+- filesystem corruption on SSD partition containing /home
+- possibly triggered by:
+  - sudden power issue
+  - improper shutdown
+  - physical movement (less likely than HDD, but possible)
 
 Important observation:
 - system worked normally before
-- issue appeared suddenly
-- likely triggered by physical movement or existing wear
+- issue appeared suddenly without config changes
 
 ---
 
 ## Final Setup
 
-- HDD removed from boot usage
-- system running entirely on SSD:
-  - /
-  - /home
+- system stable after fsck repair
+- /home functioning normally
+- HDD remains secondary / unused
 
-System now stable and boots normally.
+Note:
+- long-term SSD health still worth monitoring
 
 ---
 
 ## Key Takeaways
 
 ### 1. /etc/fstab can break boot
-- wrong UUID = emergency mode
-- always validate mounts
+- wrong UUID or failed mount = emergency mode
+- always validate mounts with:
+  mount -a
 
-### 2. Emergency mode is usually a mount issue
+---
+
+### 2. Emergency mode is often a mount or filesystem issue
 Not necessarily a broken OS.
 
-### 3. Config vs hardware matters
+---
 
-- fstab issue → configuration problem
-- I/O errors → hardware failure
+### 3. Always verify assumptions about disk layout
 
-### 4. Old hardware fails unpredictably
-- works fine initially
-- then fails suddenly due to degradation or physical shock
+Initial assumption:
+- /home was on HDD
 
-### 5. Keep early Linux setups simple
-- SSD-only setups are more stable
-- fewer moving parts = fewer failures
+Actual:
+- /home was on SSD
+
+Misreading disk layout can lead to wrong debugging path.
+
+---
+
+### 4. fsck can recover a system quickly
+
+- repaired filesystem corruption
+- restored normal boot
+
+However:
+- does NOT guarantee long-term disk health
+
+---
+
+### 5. Distinguish between layers of failure
+
+- fstab → configuration
+- fsck → filesystem corruption
+- I/O errors → potential hardware issue
 
 ---
 
 ## Commands Used
 
-lsblk -f
-blkid
-journalctl -xb
-dmesg -i error
-mount -a
+lsblk -f  
+blkid  
+journalctl -xb  
+dmesg | grep -i error  
+mount -a  
+fsck /dev/sdaX  
 
 ---
 
 ## Reflection
 
-This was one of the first hands-on experiences debugging:
+This was a hands-on experience debugging:
 
 - Linux boot failures
-- filesystem mounting issues
-- separation of software vs hardware faults
+- fstab configuration issues
+- filesystem corruption and repair
+- incorrect assumptions about disk layout
 
 Key lesson:
 
-Not all Linux issues are configuration problems — sometimes the hardware is the root cause.
+Accurate system understanding (what is mounted where) is critical before attempting fixes. Misidentifying the disk layout can lead to chasing the wrong root cause.
